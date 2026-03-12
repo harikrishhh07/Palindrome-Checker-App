@@ -1,122 +1,77 @@
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.Stack;
 
 public class PalindromeCheckerApp {
 
-
     public static void main(String[] args) {
 
-        // Original string
         String word = "racecar";
 
-        // Create Deque
-        Deque<Character> deque = new LinkedList<>();
+        // ----- Two Pointer Method -----
+        long startTime1 = System.nanoTime();
 
-        // Insert characters into deque
-        for (int i = 0; i < word.length(); i++) {
-            deque.addLast(word.charAt(i));  // Insert at rear
-        }
+        boolean result1 = checkPalindromeTwoPointer(word);
 
-        boolean isPalindrome = true;
+        long endTime1 = System.nanoTime();
 
-        // Compare front and rear elements
-        while (deque.size() > 1) {
-
-            char front = deque.removeFirst();  // Remove from front
-            char rear = deque.removeLast();    // Remove from rear
-
-            if (front != rear) {
-                isPalindrome = false;
-                break;
-            }
-        }
-
-        // Display result
-
-        // Node class for Singly Linked List
-        static class Node {
-            char data;
-            Node next;
-
-            Node(char data) {
-                this.data = data;
-                this.next = null;
-            }
-        }
-
-        public static void main(String[] args) {
-
-            String word = "level";
-
-            // Convert string to linked list
-            Node head = null;
-            Node tail = null;
-
-            for (int i = 0; i < word.length(); i++) {
-                Node newNode = new Node(word.charAt(i));
-
-                if (head == null) {
-                    head = newNode;
-                    tail = newNode;
-                } else {
-                    tail.next = newNode;
-                    tail = newNode;
-                }
-            }
-
-            boolean isPalindrome = checkPalindrome(head);
+        long timeTaken1 = endTime1 - startTime1;
 
 
-            if (isPalindrome) {
-                System.out.println(word + " is a Palindrome.");
-            } else {
-                System.out.println(word + " is NOT a Palindrome.");
-            }
-        }
+        // ----- Stack Method -----
+        long startTime2 = System.nanoTime();
+
+        boolean result2 = checkPalindromeStack(word);
+
+        long endTime2 = System.nanoTime();
+
+        long timeTaken2 = endTime2 - startTime2;
 
 
+        // Display results
+        System.out.println("Word: " + word);
 
-        // Method to check palindrome using Linked List
-        public static boolean checkPalindrome(Node head) {
+        System.out.println("\nTwo Pointer Method Result: " + result1);
+        System.out.println("Execution Time: " + timeTaken1 + " ns");
 
-            if (head == null || head.next == null) {
-                return true;
-            }
-
-            // Step 1: Find middle using Fast & Slow pointers
-            Node slow = head;
-            Node fast = head;
-
-            while (fast != null && fast.next != null) {
-                slow = slow.next;
-                fast = fast.next.next;
-            }
-
-            // Step 2: Reverse second half
-            Node prev = null;
-            Node current = slow;
-            Node nextNode;
-
-            while (current != null) {
-                nextNode = current.next;
-                current.next = prev;
-                prev = current;
-                current = nextNode;
-            }
-
-            // Step 3: Compare first half and reversed second half
-            Node firstHalf = head;
-            Node secondHalf = prev;
-
-            while (secondHalf != null) {
-                if (firstHalf.data != secondHalf.data) {
-                    return false;
-                }
-                firstHalf = firstHalf.next;
-                secondHalf = secondHalf.next;
-            }
-
-            return true;
-        }
-
+        System.out.println("\nStack Method Result: " + result2);
+        System.out.println("Execution Time: " + timeTaken2 + " ns");
     }
+
+
+    // Method 1: Two Pointer Approach
+    public static boolean checkPalindromeTwoPointer(String str) {
+
+        int start = 0;
+        int end = str.length() - 1;
+
+        while (start < end) {
+
+            if (str.charAt(start) != str.charAt(end)) {
+                return false;
+            }
+
+            start++;
+            end--;
+        }
+
+        return true;
+    }
+
+
+    // Method 2: Stack Approach
+    public static boolean checkPalindromeStack(String str) {
+
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : str.toCharArray()) {
+            stack.push(c);
+        }
+
+        for (char c : str.toCharArray()) {
+            if (c != stack.pop()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
